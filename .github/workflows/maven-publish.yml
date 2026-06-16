@@ -1,39 +1,23 @@
-name: Java Hello World
+name: Java CI with Maven
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
   build:
-    name: Run Java Hello World
     runs-on: ubuntu-latest
 
     steps:
-      # 1. リポジトリのコードをチェックアウト
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      # 2. Java環境のセットアップ
-      - name: Set up JDK
-        uses: actions/setup-java@v4
-        with:
-          java-version: '21'
-          distribution: 'corretto'
-
-      # 3. Hello World Javaコードのコンパイルと実行
-      - name: Run Java Hello World
-        run: |
-          # テスト用のJavaファイルを直接生成
-          cat << 'EOF' > HelloWorld.java
-          public class HelloWorld {
-              public static void main(String[] args) {
-                  System.out.println("Hello World from GitHub Actions!");
-              }
-          }
-          EOF
-          
-          # コンパイルと実行
-          javac HelloWorld.java
-          java HelloWorld
+    - uses: actions/checkout@v4
+    
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+        
+    - name: Build with Maven
+      run: mvn -B package
